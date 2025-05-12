@@ -137,3 +137,4 @@ function loadHTML(url, elementId) {
         })
         .catch(error => console.error('Error loading HTML:', error));
 }
+<link rel="stylesheet" href="css/globals.css">
