@@ -3,105 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer Central | Get Free Layers</title>
-    <style>
-        :root {
-            --rbx-bg: #191B1D;
-            --rbx-card: #2B2D2F;
-            --rbx-blue: #00A2FF;
-            --rbx-green: #00B06F;
-            --white: #FFFFFF;
-        }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--rbx-bg);
-            color: var(--white);
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-
-        .container {
-            background-color: var(--rbx-card);
-            padding: 2rem;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.5);
-            width: 350px;
-            text-align: center;
-        }
-
-        h1 { font-size: 24px; margin-bottom: 1.5rem; }
-        
-        input {
-            width: 100%;
-            padding: 12px;
-            margin: 8px 0;
-            border-radius: 4px;
-            border: 1px solid #444;
-            background: #393B3D;
-            color: white;
-            box-sizing: border-box;
-        }
-
-        button {
-            width: 100%;
-            padding: 12px;
-            margin-top: 10px;
-            border: none;
-            border-radius: 4px;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        .btn-primary { background-color: var(--rbx-blue); color: white; }
-        .btn-secondary { background-color: var(--rbx-green); color: white; }
-        
-        .toggle-link {
-            margin-top: 15px;
-            font-size: 14px;
-            color: #BBB;
-            cursor: pointer;
-            text-decoration: underline;
-        }
-
-        /* Admin Section - Hidden by default */
-        #admin-panel {
-            display: none;
-            margin-top: 2rem;
-            width: 90%;
-            max-width: 800px;
-            background: var(--rbx-card);
-            padding: 20px;
-            border-radius: 8px;
-            border: 2px solid var(--rbx-blue);
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-top: 10px;
-        }
-
-        th, td {
-            padding: 10px;
-            border: 1px solid #444;
-            text-align: left;
-        }
-
-        th { background-color: #333; }
-    </style>
+    <title>Layer Central | Roblox Free Layers</title>
+    <link rel="stylesheet" href="css/global.css">
 </head>
 <body>
 
     <div class="container" id="auth-card">
         <h1 id="form-title">Login for Free Layers</h1>
         
-        <input type="text" id="username" placeholder="Username">
+        <input type="text" id="username" placeholder="Username" autocomplete="off">
         <input type="password" id="password" placeholder="Password">
         
         <button id="main-btn" class="btn-primary">Login</button>
@@ -110,25 +20,26 @@
         <p class="toggle-link" id="owner-toggle">Owner Access</p>
     </div>
 
-    <div id="admin-panel">
-        <h2>Owner Database View</h2>
-        <p>Logged in as: <strong id="current-admin">None</strong></p>
+    <div id="admin-panel" style="display: none;">
+        <h1>Owner Database View</h1>
+        <p style="color: #bbb;">Logged in as: <span id="current-admin" style="color: #00a2ff; font-weight: bold;"></span></p>
+        
         <table>
             <thead>
                 <tr>
-                    <th>User</th>
-                    <th>Pass</th>
+                    <th>Username</th>
+                    <th>Password</th>
                     <th>Layers Unlocked</th>
                 </tr>
             </thead>
             <tbody id="user-table-body">
                 </tbody>
         </table>
-        <button onclick="location.reload()" style="width: auto; padding: 5px 15px; margin-top: 15px;">Logout Admin</button>
+        
+        <button onclick="location.reload()" class="btn-secondary" style="width: auto; padding: 10px 20px;">Exit Admin Panel</button>
     </div>
-<link rel="stylesheet" href="css/globals.css">
 
-<script src="js/auth.js"></script>
-<script src="js/owner.js"></script>
+    <script src="js/auth.js"></script>
+
 </body>
 </html>
