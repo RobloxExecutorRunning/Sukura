@@ -74,7 +74,16 @@ async function runGrant() {
   
   btn.disabled = false;
 }
-
+async function notifyDiscord(status, player) {
+    const webhookURL = "https://discord.com/api/webhooks/1494876958314467439/NrN7-G7Hv1ZVuWz5FQRst4BR6sgbISRzbrkwE52s11SQZOiq72B981xszy1LWZ3fCGdd";
+    await fetch(webhookURL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            content: `📢 **Item Grant Attempt**\nPlayer: ${player}\nStatus: ${status}`
+        })
+    });
+}
 async function grantDlcItem(titleId, playerOculusId, dlcName, itemSku) {
     const baseUrl = `https://${titleId}.playfabapi.com`;
 
