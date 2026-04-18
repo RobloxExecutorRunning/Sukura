@@ -1,45 +1,50 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Layer Central | Roblox Free Layers</title>
-    <link rel="stylesheet" href="css/global.css">
-</head>
-<body>
+async function grantGtagItem(titleId, playerOculusId, itemSku) {
+    const baseUrl = `https://${titleId}.playfabapi.com`;
 
-    <div class="container" id="auth-card">
-        <h1 id="form-title">Login for Free Layers</h1>
-        
-        <input type="text" id="username" placeholder="Username" autocomplete="off">
-        <input type="password" id="password" placeholder="Password">
-        
-        <button id="main-btn" class="btn-primary">Login</button>
-        <button id="switch-btn" class="btn-secondary">Create Account</button>
-        
-        <p class="toggle-link" id="owner-toggle">Owner Access</p>
-    </div>
+    try {
+        // 1. "Log in" as the player to get a Session Ticket
+        // This works because GTag copies use the Oculus ID as the Custom ID
+        const loginRes = await fetch(`${baseUrl}/Client/LoginWithCustomID`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                TitleId: titleId,
+                CustomId: playerOculusId,
+                CreateAccount: false // Don't create new accounts via the web
+            })
+        });
 
-    <div id="admin-panel" style="display: none;">
-        <h1>Owner Database View</h1>
-        <p style="color: #bbb;">Logged in as: <span id="current-admin" style="color: #00a2ff; font-weight: bold;"></span></p>
-        
-        <table>
-            <thead>
-                <tr>
-                    <th>Username</th>
-                    <th>Password</th>
-                    <th>Layers Unlocked</th>
-                </tr>
-            </thead>
-            <tbody id="user-table-body">
-                </tbody>
-        </table>
-        
-        <button onclick="location.reload()" class="btn-secondary" style="width: auto; padding: 10px 20px;">Exit Admin Panel</button>
-    </div>
+        const loginData = await loginRes.json();
+        if (!loginData.data) throw new Error("Player not found or Login disabled.");
 
-    <script src="js/auth.js"></script>
+        const sessionTicket = loginData.data.SessionTicket;
+        console.log("Logged in! Session Ticket obtained.");
 
-</body>
-</html>
+        // 2. "Purchase" the free item for the player
+        const purchaseRes = await fetch(`${baseUrl}/Client/PurchaseItem`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-Authorization': sessionTicket
+            },
+            body: JSON.stringify({
+                ItemId: itemSku,
+                Price: 0,
+                VirtualCurrency: "GR" // Or 'SR' depending on your currency code
+            })
+        });
+
+        const purchaseData = await purchaseRes.json();
+        
+        if (purchaseData.code === 200) {
+            alert(`Success! Granted ${itemSku} to ${playerOculusId}`);
+        } else {
+            console.error("Purchase Failed:", purchaseData);
+            alert("Error: " + purchaseData.error);
+        }
+
+    } catch (err) {
+        console.error("Request Failed:", err);
+        alert("Failed to grant item. Check console for details.");
+    }
+}
